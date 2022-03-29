@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{margin: 0px; padding: 0px;}
+        body{ width:960px; margin: 0px auto;}
+        #page {width: 100%; height: 1000px;}
+        #menu{width: 100%; height: 80px; border:solid gray  1px ; margin-bottom: 10px; }
+        #top {width: 100%; height: 200px; overflow: hidden; margin-bottom: 10px;}
+        #top .box {
+            float: left;
+            width: 30%;
+            height: 100%;
+            border:solid gray  1px;
+            margin-right: 12px;
+        }
+        #center {width: 100%; height: 100%; overflow: hidden;margin-bottom: 10px;}
+        #left { 
+            width:49%;
+            height: 100%;
+            float: left;
+            background: pink;
+        }
+        #right { 
+            width:49%;
+            height: 100%;
+            float: right;
+            background: pink;
+        }
+        #bottom {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        #bottom .box {
+            float: left;
+            width: 48%;
+            height: 100%;
+            background-color: pink;
+            margin-right: 12.5px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div id="page">
+        <div id="menu"></div>
+        <div id="top">
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+        </div>
+        <div id="center">
+            <div id ="left"></div>
+            <div id ="right"></div>
+        </div>
+        <div id="bottom">
+            <div class="box"></div>
+            <div class="box"></div>
+        </div>
+    </div>
+</body>
+</html>

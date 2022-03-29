@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <title>
+            제목입니다.
+            link rel = "stylesheet" href = "ex01.css"/>
+        </title>
+        <style>
+            h1 {color:blueviolet; background-color:green;}
+            h2{color:green; background-color: yellow;}
+            body {background-color: teal;}
+        </style>
+      
+        
+    </head>
+    
+    <body>
+        <h1>안녕하세요</h1>
+        <h1>저는 홍길동입니다.</h1>
+        <h2>반갑습니다!</h2>
+        
+    </body>
+</html>

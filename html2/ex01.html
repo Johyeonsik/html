@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상품관리</title>
+    <link rel="stylesheet" href="common.css">
+    <style>
+        *{margin:0px; padding: 0px;}
+        body {width:960px; margin: 0px auto; border: solid 1px gray;} 
+        #page{border: solid 3px rgb(126, 193, 255); height: 500px; }
+        h1,h5 {text-align: center; padding-top: 50px; color: gray;}
+        table{margin: 0px auto; margin-top: 50px; border-collapse: collapse;}
+        td,th {border: 3px solid rgb(74, 207, 174);padding:10px;}
+        #button {width:600px; margin:0px auto; text-align:center; padding:10px;}
+        .button {
+            width: 80px;
+            padding: 5px;
+            background:rgb(74, 207, 174);
+            color:white;
+            border-radius: 5px;
+            border: none;
+        }
+        input[type="text"] {padding: 5px; border:1px solid gray;}
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+   
+        <div id ="top">
+            <h1>상품관리</h1>
+        </div>
+        <div id ="center">
+            <div id="center">
+                <div id = "menu">
+                    <span><a href="./ex01.html">상품관리</a></span>
+                    <span><a href="./ex02.html">회원관리</a></span>
+                    <span><a href="./ex03.html">주소관리</a></span>
+                </div>
+            <form name="frm">
+                <table>
+                    <tr>
+                        <td width = 100>상품코드</td>
+                        <td width = 500><input type="text" name="code" value="P001" readonly></td>
+                    </tr>
+                    <tr>
+                        <td width = 100>상품이름</td>
+                        <td width = 500><input type="text" name="name" size="50"></td>
+                    </tr>
+                    <tr>
+                        <td width = 100>상품가격</td>
+                        <td width = 500><input type="text" name="price" size="5">원</td>
+                    </tr>
+                    <tr>
+                        <td width = 100>상품판매사</td>
+                        <td width = 500><input type="text" name="company" size="10"></td>
+                    </tr>
+                    </table>
+                    <div id = "button" >
+                        <input type="submit" value="등록" class="button">
+                        <input type="reset" value="취소" class="button">
+                    </div>
+                </div>
+            </form>
+        <div id ="bottom"></div>
+        <h5>Copyright 2022. 인천일보아카데미 Reserve All Right.</h5>
+    </div>
+</body>
+<script>
+    $(frm).on("submit",function(e){  //frm sumit버튼을 클린한 경우
+        e.preventDefault();     //submit을 방지함
+        //유효성체크
+        let code=$(frm.code).val();
+        let name=$(frm.name).val();
+        let price=$(frm.price).val();
+        let company=$(frm.company).val();
+
+        if(name=="") {
+            alert("상품이름을 입력하세요!")
+            $(frm.name).focus();
+        }else if (price=="") {
+            alert("상품가격을 입력하세요!")
+            $(frm.price).focus();
+        }else if (company=="") {
+            alert("상품판매사를 입력하세요!")
+            $(frm.company).focus();
+        }else {
+            let str="code:" + code + "\n";
+            str+="name:" + name + "\n";
+            str+="price:" + price + "\n";
+            str+="company:" + company;
+            if(!confirm("정말로 등록하실래요?")) return;
+            frm.submit(); //제출하다
+            alert(str);
+        }
+      
+    });
+</script>
+</html>

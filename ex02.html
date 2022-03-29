@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>앨범목록</title>
+    <link rel ="stylesheet" href="common.css">
+    <script src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
+    <style>
+        #albums{
+            padding: 30px;
+        }
+        #albums h4{
+            border-bottom: 1px dotted gray;
+            margin-bottom: 20px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id = "page">
+        <div id = "top">
+            <h1>앨범목록</h1>
+        </div>
+        <div id = "center">
+            <div id = "albums"></div>
+            <script id="temp" type="text/x-handlebars-template">
+                {{#each .}}
+                <h4>
+                    <span class = "id">{{id}}</span>
+                    <span class ="title">{{title}}</span>
+                </h4>
+                {{/each}}
+            </script>
+            <!--사진목록 출력-->
+            <div id = photos></div>
+            <script id="temp" type="text/x-handlebars-template">
+                {{#each .}}
+                 <h4>
+                    <div calss = "box">
+                        <img src = "{{thumbnailUrl}}">
+                        <h4>{{id}} {{title}}</h4>
+                        
+                    </div>
+                 </h4>
+               {{/each}}
+            </script>   
+        </div>
+    </div>
+</body>
+<script>
+    getAlbums();
+
+    //앨범을 클릭했을때
+    $("#albums").on("click","h4",function(){
+        let albumid = $(this).find(".id").html();
+        $.ajax({
+            type: "get",
+            dataType: "json",
+            url:"https://jsonplaceholder.typicode.com/photos",
+            success: function(data){
+                let newData=[];
+                $(data).each(function(){
+                    let id = this.albumId;
+                    let photoid = this.id;
+                    let start=(id-1)*50+1;
+                    let end=start+4;
+
+                    if(id==albumid && photoid>=start && photoid<=end) newData.push(this);
+
+                });
+                let template = Handlebars.compile($("#temp1").html());
+                $("#photos").html(template(newData));
+            }
+        });
+    });
+    function getAlbums(){
+        $.ajax({
+            type: "get",
+            dataType: "json",
+            url:"https://jsonplaceholder.typicode.com/albums",
+            success: function(data) {
+                let newData = [];
+                $(data).each(function(){
+                    let id = this.id;
+                    if(id<=5) newData.push(this);
+                });
+                let template = Handlebars.compile($("#temp").html());
+                $("#albums").html(template(newData));
+
+                //사진목록
+               
+            }
+        });
+    }
+</script>
+</html>

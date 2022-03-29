@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="common.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        #post {border:1px solid black; margin: 10px; padding: 10px;}
+        #post p {margin: 20px;}
+        button:disabled{background: gray; color: white;}
+    </style>
+</head>
+<body>
+    <div id = "page">
+        <div id="top">
+            <h1>게시글 관리</h1>
+        </div>
+        <div id = "center"></div>
+        <div id = "post"></div>
+        <div id ="button">
+            <button id = "prev">이전</button>
+            <span id="curpage">1</span>
+            <button id = "next">다음</button>
+        </div>
+    </div>
+</body>
+<script>
+    
+    let curpage=1;
+    let perPageNum=5;
+    let lastPage=Math.ceil(100/perPageNum);
+    getlist();
+
+    //다음버튼 클릭
+    $("#next").on("click",function() {
+        curpage++;
+        $("#curpage").html(curpage + "/" + lastPage);
+        getlist();
+    });
+    //이전버튼 클릭
+    $("#prev").on("click",function() {
+        curpage--;
+        $("#curpage").html(curpage + "/" + lastPage);
+        getlist();
+    });
+
+    function getlist(){
+        $.ajax({
+        type:"get",
+        dataType:"json",
+        url:"https://jsonplaceholder.typicode.com/posts",
+        success:function(data) {
+            let str="";
+            $(data).each(function(){
+                let id=this.id;
+                let title=this.title;
+                let body = this.body;
+                let start = (curpage-1)*perPageNum+1;
+                let end = (curpage)*perPageNum;
+                if(id >=start && id <= end) {
+                    str += "<h3>" + id + ":" + title + "</h3>";
+                    str += "<p>" + body + "<p>";
+                }
+            });
+            $("#post").html(str);
+            //1페이지인경우 이전버튼 클릭 불가능
+            if(curpage==1) {
+                $("#prev").attr("disabled",true);
+            }else {
+                $("#prev").attr("disabled",false);
+            }
+
+            //현재 페이지가 마지막페이지일때 
+            if(curpage==lastPage) {
+                $("#next").attr("disabled",true);
+            }else {
+                $("#next").attr("disabled",false);
+            }
+        }
+    });
+    };
+    
+</script>
+</html>

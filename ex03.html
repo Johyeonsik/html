@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도서검색</title>
+    <link rel="stylesheet" href="common.css"/>
+    <script src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
+    <style>
+        #books {
+            overflow: hidden;
+            width: 100%;
+            margin: 0px auto;
+            padding-left: 20px;
+        }
+        .box {
+            float: left;
+            width: 160px;
+            height:250px;
+            border: 1px solid gray;
+            margin: 5px;
+            padding: 5px;
+            border-radius: 5px;
+            background: rgb(245, 238, 227);
+        }
+
+        .title {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-size: 12px;
+            font-weight: bold;
+            
+        }
+        .price {
+            font-size: 11px;
+            color: blue;
+        }
+        .authors {
+            font-size: 11px;
+        }
+        #bookInfo {
+            border-top: 1px dotted gray;
+            border-bottom: 1px dotted gray;
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 12px;
+        }
+        button:disabled{background: gray;}
+    </style>
+</head>
+<body>
+    <div id="page">
+        <div id="top">
+            <h1>도서검색</h1>
+        </div>
+        <div id="center">
+             <!--도서 검색한 결과 목록-->
+               <div id = "bookInfo">
+                    <input type = "text" placeholder="검색어" id=query value="자바">
+                          검색수: <span id = "total"></span> 건
+                    
+                    </div>
+                
+                </div>
+            <div id="books"></div>
+            <script id="temp" type="text/x-handlebars-template">
+                {{#each documents}}
+                <div class="box">
+                    <img src ="{{getSrc thumbnail}}">
+                    <div class="title">제목: {{title}}</div>
+                    <div class="price">가격: {{price}}원</div>
+                    <div class="authors">작가: {{authors}}</div>
+                </div>
+                {{/each}}
+            </script>
+            <script>
+                Handlebars.registerHelper("getSrc",function(thumbnail){
+                    if(thumbnail) {
+                        return thumbnail;
+                    }else {
+                        return "http://placehold.it/150x180";
+                    }
+                });
+            </script>
+            <div id="button">
+                <button id = "prev">이전</button>
+                <span id = "curpage">1</span>
+                <button id = "next">다음</button>
+           </div>
+        </div>
+        <div id="bottom">
+            <h3>Copyright 2022. 인천일보아카데미 All Right Reserved.</h3>
+        </div>
+    </div>
+</body>
+<script>
+    let page=1;
+    let query = $("#query").val();
+    getBooks();
+
+    $("#query").on("keydown", function(e){
+        if(e.keyCode==13) {
+            page = 1;
+            query=$("#query").val();
+            getBooks();
+        }
+    });
+
+    $("#prev").on("click",function(){
+        page--;
+        getBooks();
+    });
+    $("#next").on("click",function(){
+        page++;
+        getBooks();
+    });
+
+    function getBooks(){
+        $.ajax({
+            type: "get",
+            dataType: "json",
+            url: "https://dapi.kakao.com/v3/search/book?target=title",
+            headers: {"Authorization": "KakaoAK 80815fcab25d5c6a2a0243efacc70514"},
+            data: {"query" : query, "size": 10 ,"page":page},
+            success:function(data){
+                let template = Handlebars.compile($("#temp").html());
+                $("#books").html(template(data));
+
+                $("#total").html(data.meta.pageable_count);//검색수
+                $("#curpage").html(page);//현재페이지
+                
+                if(page==1) {
+                    $("#prev").attr("disabled",true);
+                    
+                }else {
+                    $("#prev").attr("disabled",false);
+                    }
+                
+                let is_end=data.meta.is_end;
+
+                if(page==is_end) {
+                    $("#next").attr("disabled",true);
+                    
+                }else {
+                    $("#next").attr("disabled",false);
+                    }
+                
+            }
+        });
+    };
+</script>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사진목록</title>
+    <link rel="stylesheet" href="common.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        #photos {
+            overflow: hidden;
+            width:900px;
+            margin: 0px auto;
+        }
+        .box {
+            float: left;
+            width:200px;
+            margin: 5px;
+            padding:5px;
+            text-align: center;
+            border: 1px solid gray;
+            border-radius: 5px;
+        }
+
+        .title {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        button:disabled {background: gray;}
+    </style>
+</head>
+<body>
+    <div id = "page">
+        <div id = "top">
+            <h1>사진목록</h1>
+        </div>
+        <div id = "center">
+            <div id = "photos"></div>
+            <div id = "button">
+                <button id = "prev">◀ </button>
+                <span id = "curpage">1</span>
+                <button id = "next">▶ </button>
+            </div>
+        <div id = "bottom">
+            <h5> CopyRight 2022. 인천일보아카데미 All Right Reserved.</h5>
+        </div>
+    </div>
+</body>
+<script>
+    let curpage = 1;
+    let perPageNum = 12;
+    let lastPage=Math.ceil(5000/perPageNum);
+    getList();
+
+    $("#inpage").on("keyDown",function(e){
+        if(e.keyCode==13) {
+            if(lastPage < $("#inpage").val()){
+                alert("마지막페이지보다 큽니다")
+            }else {
+                curpage=$("#inpage").val();
+                getList();
+            }
+        
+        }
+    })
+    //다음버튼 클릭한 경우
+    $("#next").on("click",function(){
+        curpage++;
+        getList();
+    });
+
+        //이전버튼 클릭한 경우
+        $("#prev").on("click",function(){
+        curpage--;
+        getList();
+    });
+    //사진목록불러오기
+    function getList(){
+        $.ajax({
+            type: "get",
+            dataType: "json",
+            url: "https://jsonplaceholder.typicode.com/photos",
+            success: function(data) {
+                let str = "";
+                $(data).each(function(){
+                    let id = this.id;
+                    let title = this.title
+                    let img = this.thumbnailUrl;
+                    let start = (curpage -1) *perPageNum+1;
+                    let end= (curpage)*perPageNum;
+
+                    if(id >= start && id <= end) {
+                        str += "<div class = 'box'>";
+                        str += "<img src='" + img + "'>";
+                        str += "<div class = 'title'>" + id + ":" + title + "</div>"
+                        str += "</div>"
+                    }
+                    
+                });
+                $("#photos").html(str);
+                $("#curpage").html(curpage + "/" + lastPage);
+
+                if(curpage==1) {
+                    $("#prev").attr("disabled",true);
+                }else {
+                    $("#prev").attr("disabled",false);
+                }
+
+                if(curpage >= lastPage) {
+                    $("#next").attr("disabled",true);
+                }else {
+                    $("#next").attr("disabled",false);
+                }
+            }
+        });
+    }
+</script>
+</html>
